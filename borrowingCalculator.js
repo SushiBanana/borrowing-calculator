@@ -14,11 +14,28 @@ const LOAN_TERM_MONTHS = 360; // 30 Years
 const INTEREST_RATE = 7.0; // 7.0% baseline interest rate
 const ASSESSMENT_RATE_BUFFER = 3.0; // 3.0% buffer added to interest rates
 
+const BASE_URL = 'http://localhost:3000'
+const BEARER_TOKEN = 'Bearer pat_abcdefghijklmnopqrstuvwxyz0123456789'
+
 // Legacy placeholder functions to replace with API calls
-function getTax(income) {
+async function getTax(income) {
     // REPLACE THIS
     // Write your TAX API call code here.
-    return Math.round(income * 0.25);
+
+    const taxURL = `${BASE_URL}/api/tax?income=${income}`
+    const requestHeader = {
+        "Authorization": BEARER_TOKEN
+    }
+    try {
+        const taxResponse = await fetch(taxURL, {
+            headers: requestHeader
+        })
+        const taxJSON = await taxResponse.json()
+        return taxJSON.tax
+
+    } catch (e){
+        throw new Error(`Failed to fetch tax: ${e.message}`);
+    }
 }
 
 function getHEM(income, dependents) {

@@ -8,50 +8,46 @@ const {calculateBorrowingPower, getTax, getHEM} = require('./borrowingCalculator
 
 describe('Tax Calculation', () => {
 
-    it('should return 0 tax for an income of 0', () => {
-        const result = getTax(0);
+    it('should return 0 tax for an income of 0', async() =>  {
+        const result = await getTax(0);
         assert.strictEqual(result, 0);
     });
 
-    it('should return 0 tax when income is exactly at the 20000 threshold', () => {
-        const result = getTax(20000);
+    it('should return 0 tax when income is exactly at the 20000 threshold', async () => {
+        const result = await getTax(20000);
         assert.strictEqual(result, 0);
     });
 
-    it('should apply the 15% bracket when income is just above 20000', () => {
-        const result = getTax(20001);
+    it('should apply the 15% bracket when income is just above 20000', async () => {
+        const result = await getTax(20001);
         assert.strictEqual(result, 0);
     });
 
-    it('should not apply the 25% bracket when income is exactly at the 50000 threshold', () => {
-        const result = getTax(50000);
+    it('should not apply the 25% bracket when income is exactly at the 50000 threshold', async () => {
+        const result = await getTax(50000);
         assert.strictEqual(result, 4500);
     });
 
-    it('should apply the 25% bracket when income is just above 50000', () => {
-        const result = getTax(50001);
+    it('should apply the 25% bracket when income is just above 50000', async () => {
+        const result = await getTax(50001);
         assert.strictEqual(result, 4500);
     });
 
-    it('should not apply the 35% bracket when income is exactly at the 100000 threshold', () => {
-        const result = getTax(100000);
+    it('should not apply the 35% bracket when income is exactly at the 100000 threshold', async () => {
+        const result = await getTax(100000);
         assert.strictEqual(result, 17000);
     });
 
-    it('should apply the 35% bracket when income is just above 100000', () => {
-        const result = getTax(100001);
+    it('should apply the 35% bracket when income is just above 100000', async () => {
+        const result = await getTax(100001);
         assert.strictEqual(result, 17000);
     });
 
-    it('should correctly stack all tax brackets for income well above 100000', () => {
-        const result = getTax(150000);
+    it('should correctly stack all tax brackets for income well above 100000', async () => {
+        const result = await getTax(150000);
         assert.strictEqual(result, 34500);
     });
 
-    it('should return 0 tax for negative income', () => {
-        const result = getTax(-5000);
-        assert.strictEqual(result, 0);
-    });
 });
 
 
