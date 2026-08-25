@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@types/node": "^26.3.0",
     "mocha": "^11.7.0"
   },
   "scripts": {
