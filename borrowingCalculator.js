@@ -21,6 +21,7 @@ const BEARER_TOKEN = 'Bearer pat_abcdefghijklmnopqrstuvwxyz0123456789'
 async function getTax(income) {
     // REPLACE THIS
     // Write your TAX API call code here.
+    if (income < 0) throw new Error('Income must be non-negative')
 
     const taxURL = `${BASE_URL}/api/tax?income=${income}`
     const requestHeader = {
@@ -30,6 +31,10 @@ async function getTax(income) {
         const taxResponse = await fetch(taxURL, {
             headers: requestHeader
         })
+        if (!taxResponse.ok) {
+            const errorJSON = await taxResponse.json()
+            throw new Error(`Server error: ${taxResponse.status} - ${errorJSON.error}`)
+        }
         const taxJSON = await taxResponse.json()
         return taxJSON.tax
 
@@ -38,22 +43,43 @@ async function getTax(income) {
     }
 }
 
-function getHEM(income, dependents) {
+async function getHEM(income, dependents) {
     // REPLACE THIS
     // Write your HEM API call code here.
-    return 2000 + (dependents * 400);
+    if (income < 0) throw new Error('Income must be non-negative')
+    if (dependents < 0) throw new Error('Dependents must be non-negative')
+
+    const hemUrl = `${BASE_URL}/api/hem?income=${income}&dependents=${dependents}`
+    const request_headers = {
+        "Authorization": BEARER_TOKEN
+    }
+
+    try{
+        const hemResponse = await fetch(hemUrl, {
+            headers: request_headers
+        })
+        if (!hemResponse.ok){
+            const errorJSON = await hemResponse.json()
+            throw new Error(`Server error: ${hemResponse.status} - ${errorJSON.error}`)
+        }
+        const hemJSON = await hemResponse.json()
+        return hemJSON.hem
+
+    } catch (e){
+        throw new Error(`Failed to fetch HEM: ${e.message}`)
+    }
 }
 
 /**
  * Calculates the total borrowing power amount and the monthly repayment configuration
  */
-function calculateBorrowingPower(income, dependents, expenses, creditLimits, annualAssessmentRate) {
+async function calculateBorrowingPower(income, dependents, expenses, creditLimits, annualAssessmentRate) {
     // 1. Calculate Net Monthly Income after tax deductions
-    const annualTax = getTax(income);
+    const annualTax = await getTax(income);
     const netMonthlyIncome = (income - annualTax) / 12;
 
     // 2. Determine living expenses (User declared expenses vs HEM baseline, whichever is higher)
-    const baselineHEM = getHEM(income, dependents);
+    const baselineHEM = await getHEM(income, dependents);
     const totalLivingExpenses = Math.max(expenses, baselineHEM);
 
     // 3. Calculate credit card liability (~3% of total limits)
