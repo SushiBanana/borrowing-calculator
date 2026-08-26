@@ -125,12 +125,6 @@ describe('Borrowing Power Calculation', () => {
         assert.strictEqual(result.monthlyRepayment, 4600);
     });
 
-    it('should return 0 for invalid negative inputs', async () => {
-        const result = await borrowingCalculator.calculateBorrowingPower(30000, 3, 4000, 5000, 7.5);
-        assert.strictEqual(result.maxLoanAmount, 0);
-        assert.strictEqual(result.monthlyRepayment, 0);
-    });
-
     it('should return 0 when expenses exceed income capacity', async () => {
         const result = await borrowingCalculator.calculateBorrowingPower(30000, 3, 4000, 5000, 7.5);
         assert.strictEqual(result.maxLoanAmount, 0);

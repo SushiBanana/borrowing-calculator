@@ -14,8 +14,8 @@ const LOAN_TERM_MONTHS = 360; // 30 Years
 const INTEREST_RATE = 7.0; // 7.0% baseline interest rate
 const ASSESSMENT_RATE_BUFFER = 3.0; // 3.0% buffer added to interest rates
 
-const BASE_URL = 'http://localhost:3000'
-const BEARER_TOKEN = 'Bearer pat_abcdefghijklmnopqrstuvwxyz0123456789'
+const BASE_URL = 'http://localhost:3000';
+const BEARER_TOKEN = 'Bearer pat_abcdefghijklmnopqrstuvwxyz0123456789';
 
 /**
  * Borrowing Power Calculator class
@@ -30,9 +30,9 @@ class BorrowingCalculator{
     async getTax(income){
         // REPLACE THIS
         // Write your TAX API call code here.
-        if (income < 0) throw new Error('Income must be non-negative')
+        if (income < 0) throw new Error('Income must be non-negative');
 
-        const taxURL = `${BASE_URL}/api/tax?income=${income}`
+        const taxURL = `${BASE_URL}/api/tax?income=${income}`;
         const requestHeader = {
             "Authorization": BEARER_TOKEN
         }
@@ -41,11 +41,11 @@ class BorrowingCalculator{
                 headers: requestHeader
             })
             if (!taxResponse.ok) {
-                const errorJSON = await taxResponse.json()
-                throw new Error(`Server error: ${taxResponse.status} - ${errorJSON.error}`)
+                const errorJSON = await taxResponse.json();
+                throw new Error(`Server error: ${taxResponse.status} - ${errorJSON.error}`);
             }
-            const taxJSON = await taxResponse.json()
-            return taxJSON.tax
+            const taxJSON = await taxResponse.json();
+            return taxJSON.tax;
 
         } catch (e){
             throw new Error(`Failed to fetch tax: ${e.message}`);
@@ -58,10 +58,10 @@ class BorrowingCalculator{
     async getHEM(income, dependents){
         // REPLACE THIS
         // Write your HEM API call code here.
-        if (income < 0) throw new Error('Income must be non-negative')
-        if (dependents < 0) throw new Error('Dependents must be non-negative')
+        if (income < 0) throw new Error('Income must be non-negative');
+        if (dependents < 0) throw new Error('Dependents must be non-negative');
 
-        const hemUrl = `${BASE_URL}/api/hem?income=${income}&dependents=${dependents}`
+        const hemUrl = `${BASE_URL}/api/hem?income=${income}&dependents=${dependents}`;
         const request_headers = {
             "Authorization": BEARER_TOKEN
         }
@@ -71,14 +71,14 @@ class BorrowingCalculator{
                 headers: request_headers
             })
             if (!hemResponse.ok){
-                const errorJSON = await hemResponse.json()
-                throw new Error(`Server error: ${hemResponse.status} - ${errorJSON.error}`)
+                const errorJSON = await hemResponse.json();
+                throw new Error(`Server error: ${hemResponse.status} - ${errorJSON.error}`);
             }
-            const hemJSON = await hemResponse.json()
-            return hemJSON.hem
+            const hemJSON = await hemResponse.json();
+            return hemJSON.hem;
 
         } catch (e){
-            throw new Error(`Failed to fetch HEM: ${e.message}`)
+            throw new Error(`Failed to fetch HEM: ${e.message}`);
         }
     }
 
